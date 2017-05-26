@@ -17,38 +17,40 @@ app.use(express.static('public'));
 app.get('/', (request, response) => {
   fs.readFile(`${__dirname}/index.html`, (error, file) => {
     response.send(file)
-  })
-})
+  });
+});
 
-app.get('/api/v1/headlines', (request, response) => {
-  database('headlines').select()
-  .then(headlines => {
-    response.status(200).json(headlines)
+app.get('/api/v1/news', (request, response) => {
+  database('fake_news').select()
+  .then(news => {
+    response.status(200).json(news)
   })
   .catch(error => {
     console.error('error:', error);
   });
-})
+});
 
-app.get('/api/v1/headlines/:id', (request, response) => {
-  database('headlines').where('id', request.params.id).select()
-    .then(headlines => {
-      response.status(200).json(headlines)
+app.get('/api/v1/news/:id', (request, response) => {
+  database('news').where('id', request.params.id).select()
+    .then(news => {
+      response.status(200).json(news)
     })
     .catch(error => {
       console.error('error: ', error);
-    })
-})
+    });
+});
 
-app.get('/api/v1/sports', (request, response) => {
-  database('sports').select()
-    .then(sports => {
-      response.status(200).json(sports)
+app.post('/api/v1/news', (request, response) => {
+  const newsArticle = request.body;
+
+  database('news').insert(newsArticle)
+    .then(article => {
+      response.status(201).json(article)
     })
     .catch(error => {
-      console.error('error:', error);
+      console.log('error: ', error);
     });
-})
+});
 
 app.listen(app.get('port'));
 
