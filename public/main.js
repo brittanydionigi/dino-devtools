@@ -4,8 +4,7 @@ fetch('http://localhost:3000/api/v1/news')
     appendNews(newsArticles);
   })
   .catch(error => {
-    console.log('error: ', error);
-    displayNotification(error);
+    displayNotification('There was a problem fetching articles');
   });
 
 

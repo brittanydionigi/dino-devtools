@@ -5,8 +5,9 @@ self.addEventListener('install', event => {
       return cache.addAll([
         './index.html',
         './css/main.css',
+        './lib/jquery-3.2.1.js',
         './main.js',
-        './logo.png'
+        './img/logo.png'
       ])
     })
   );
