@@ -17,7 +17,7 @@ app.use(cors({
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static('public'));
+app.use(express.static(__dirname + '/public'));
 
 app.options('/api/v1/news');
 
@@ -59,6 +59,6 @@ app.post('/api/v1/news', (request, response) => {
     });
 });
 
-app.listen(app.get('port'));
+app.listen(app.get('port'), () => { console.log(`App running on port ${app.get('port')}`) });
 
 module.exports = app;

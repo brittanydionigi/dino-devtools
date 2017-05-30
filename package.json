@@ -10,6 +10,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express-cors": "0.0.3"
+    "body-parser": "^1.17.2",
+    "express": "^4.15.3",
+    "express-cors": "0.0.3",
+    "knex": "^0.13.0",
+    "pg": "^6.2.3"
   }
 }
