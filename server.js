@@ -22,9 +22,7 @@ app.use(express.static(__dirname + '/public'));
 app.options('/api/v1/news');
 
 app.get('/', (request, response) => {
-  fs.readFile(`${__dirname}/index.html`, (error, file) => {
-    response.send(file)
-  });
+  response.sendFile('index.html')
 });
 
 app.get('/api/v1/news', (request, response) => {
