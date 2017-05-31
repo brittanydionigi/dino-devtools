@@ -12,11 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.17.2",
-    "dexie": "^1.5.1",
-    "express": "^4.15.3",
-    "express-cors": "0.0.3",
-    "knex": "^0.13.0",
-    "pg": "^6.2.3"
+    "express": "^4.15.3"
   },
   "devDependencies": {
     "babel-core": "^6.24.1",

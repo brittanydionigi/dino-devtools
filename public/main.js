@@ -1,43 +1,8 @@
-import { 
-  loadOfflineArticles,
-  checkOfflineAvailability,
-  saveOfflineArticle,
-  removeOfflineArticle } from './indexedDB';
-
 const fetchLatestHeadlines = () => {
   fetch('/api/v1/articles')
   .then(response => response.json())
   .then(articles => appendArticles(articles))
-  .catch(error => loadOfflineArticles());
-};
-
-const handleOfflineState = () => {
-  updateConnectionStatus('offline');
-  loadOfflineArticles();
-}
-
-const handleOnlineState = () => {
-  updateConnectionStatus('online');
-  fetchLatestHeadlines();
-}
-
-window.addEventListener('online', event => {
-  handleOnlineState();
-});
-
-window.addEventListener('offline', event => {
-  handleOfflineState();
-});
-
-
-const updateConnectionStatus = (status) => {
-  const $connectionStatus = $('#connection-status');
-
-  if (status === 'offline') {
-    $connectionStatus.addClass('offline').text(status);
-  } else {
-    $connectionStatus.removeClass('offline').text(status);
-  }
+  .catch(error => console.log('error: ', error));
 };
 
 export const appendArticles = (articles) => {
@@ -46,11 +11,6 @@ export const appendArticles = (articles) => {
 
   articles.forEach(article => {
     let articleElem = document.createElement('li');
-    
-    checkOfflineAvailability(article.id)
-    .then(article => {
-      if (article) { articleElem.classList.add('starred'); }
-    })
 
     let headline = document.createElement('p');
     headline.innerText = article.headline;
@@ -73,12 +33,6 @@ $('#latest-headlines').on('click', 'p', function(event) {
   let id = elem.dataset.articleId;
   let headline = elem.innerText;
   let byline = elem.nextSibling.innerText;
-
-  if (elem.classList.contains('starred')) {
-    removeOfflineArticle(id);
-  } else {
-    saveOfflineArticle({ id, headline, byline });
-  }
 
   elem.classList.toggle('starred');
 });
