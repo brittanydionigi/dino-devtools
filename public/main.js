@@ -1,61 +1,81 @@
-import { logDbRecords, saveForOfflineReading } from './indexedDB';
+import { loadOfflineArticles, checkOfflineArticle, saveForOfflineReading } from './indexedDB';
 
 const fetchLatestHeadlines = () => {
   fetch('/api/v1/news')
   .then(response => response.json())
   .then(articles => {
-    appendConnectionStatus('Online!');
-    appendNews(articles)
+    appendArticles(articles);
   })
   .catch(error => {
-    appendConnectionStatus('Error fetching articles. Showing offline articles instead.');
-    logDbRecords();
+    loadOfflineArticles();
   });
 };
 
+
+const handleOfflineState = () => {
+  updateConnectionStatus('offline');
+  loadOfflineArticles();
+}
+
+const handleOnlineState = () => {
+  updateConnectionStatus('online');
+  fetchLatestHeadlines();
+}
 
 fetchLatestHeadlines();
 
 window.addEventListener('online', event => {
   console.log('online again!');
-  fetchLatestHeadlines()
+  handleOnlineState();
 });
 
 window.addEventListener('offline', event => {
   console.log('offline!');
-  logDbRecords();
+  handleOfflineState();
 });
 
 
-const appendConnectionStatus = (message) => {
-  $('#notification').text(message);
+const updateConnectionStatus = (status) => {
+  const $connectionStatus = $('#connection-status');
+
+  if (status === 'offline') {
+    $connectionStatus.addClass('offline').text(status);
+  } else {
+    $connectionStatus.removeClass('offline').text(status);
+  }
 };
 
-const appendNews = (articles) => {
+export const appendArticles = (articles) => {
   $('#latest-headlines').html('');
   let articlesFrag = document.createDocumentFragment();
 
   articles.forEach(article => {
-    console.log('article: ', article);
-    let headline = document.createElement('li');
+    let articleElem = document.createElement('li');
+    articleElem.id = `article-${article.id}`;
+
+    let headline = document.createElement('p');
+    headline.innerText = article.headline;
+
     let byline = document.createElement('span');
     byline.innerText = article.byline;
-    headline.id = `article-${article.id}`;
-    headline.innerHTML = article.headline;
-    headline.appendChild(byline);
-    articlesFrag.appendChild(headline);
+
+    articleElem.appendChild(headline);
+    articleElem.appendChild(byline);
+    articlesFrag.appendChild(articleElem);
   });
 
   $('#latest-headlines').append(articlesFrag);
 };
 
-$('#latest-headlines').on('click', 'li', (event) => {
-  let article = $(event.target)[0];
+$('#latest-headlines').on('click', 'li', function(event) {
+  let article = $(this)[0];
   saveForOfflineReading({
-    id: article.id.split('-')[1],
-    headline: $(article).text(),
+    id: $(article).attr('id').split('-')[1],
+    headline: $(article).find('p').text(),
     byline: $(article).find('span').text()
   });
+
+  $(article).addClass('starred');
 });
 
 if ('serviceWorker' in navigator) {

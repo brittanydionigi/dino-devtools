@@ -71,6 +71,9 @@
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__main_js__ = __webpack_require__(1);
+
+
 // IndexedDB Variables
 const DB_NAME = 'offlineArticles';
 const DB_VERSION = 2;
@@ -107,20 +110,51 @@ function setupIndexedDB() {
 };
 
 // Cycle through IndexedDB Records and log values
-const logDbRecords = () => {
+const loadOfflineArticles = () => {
   console.log('Logging DB Records!');
   let objectStore = db.transaction(DB_STORE_NAME, 'readwrite').objectStore(DB_STORE_NAME);
   let headlineIndex = objectStore.index('headline');
+  let articles = [];
+
   objectStore.openCursor().onsuccess = event => {
     console.log("Opened cursor...");
     let cursor = event.target.result;
     if (cursor) {
-      $('#latest-headlines').append(`<li>${cursor.value.headline}<span>${cursor.value.byline}</span></li>`);
+      console.log('cursor: ', cursor.value);
+      articles.push(cursor.value);
       cursor.continue();
+    } else {
+      console.log('appending articles: ', articles);
+      __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__main_js__["appendArticles"])(articles);
     }
   };
 };
-/* harmony export (immutable) */ __webpack_exports__["a"] = logDbRecords;
+/* harmony export (immutable) */ __webpack_exports__["a"] = loadOfflineArticles;
+
+
+const checkOfflineArticle = articleId => {
+  let dbReq = indexedDB.open('offlineArticles');
+
+  dbReq.onsuccess = event => {
+    console.log('DB opened from service worker');
+
+    let db = event.target.result;
+    let transaction = db.transaction(['articles'], 'readwrite');
+
+    let objectStore = transaction.objectStore("articles");
+    let objectStoreReq = objectStore.get(articleId);
+
+    objectStoreReq.onsuccess = event => {
+      console.log('it exists!');
+      return true;
+    };
+
+    objectStoreReq.onerror = event => {
+      return false;
+    };
+  };
+};
+/* unused harmony export checkOfflineArticle */
 
 
 const saveForOfflineReading = article => {
@@ -148,14 +182,6 @@ const saveForOfflineReading = article => {
       console.log('objectStore request succeeded');
       $(`li#article-${article.id}`).addClass('starred');
     };
-
-    objectStoreReq.onerror = event => {
-      console.log('objectStore request failed', event);
-    };
-  };
-
-  dbReq.onerror = event => {
-    console.log('DB not opened from sw');
   };
 };
 /* harmony export (immutable) */ __webpack_exports__["b"] = saveForOfflineReading;
@@ -174,55 +200,77 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 const fetchLatestHeadlines = () => {
   fetch('/api/v1/news').then(response => response.json()).then(articles => {
-    appendConnectionStatus('Online!');
-    appendNews(articles);
+    appendArticles(articles);
   }).catch(error => {
-    appendConnectionStatus('Error fetching articles. Showing offline articles instead.');
-    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__indexedDB__["a" /* logDbRecords */])();
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__indexedDB__["a" /* loadOfflineArticles */])();
   });
+};
+
+const handleOfflineState = () => {
+  updateConnectionStatus('offline');
+  __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__indexedDB__["a" /* loadOfflineArticles */])();
+};
+
+const handleOnlineState = () => {
+  updateConnectionStatus('online');
+  fetchLatestHeadlines();
 };
 
 fetchLatestHeadlines();
 
 window.addEventListener('online', event => {
   console.log('online again!');
-  fetchLatestHeadlines();
+  handleOnlineState();
 });
 
 window.addEventListener('offline', event => {
   console.log('offline!');
-  __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__indexedDB__["a" /* logDbRecords */])();
+  handleOfflineState();
 });
 
-const appendConnectionStatus = message => {
-  $('#notification').text(message);
+const updateConnectionStatus = status => {
+  const $connectionStatus = $('#connection-status');
+
+  if (status === 'offline') {
+    $connectionStatus.addClass('offline').text(status);
+  } else {
+    $connectionStatus.removeClass('offline').text(status);
+  }
 };
 
-const appendNews = articles => {
+const appendArticles = articles => {
   $('#latest-headlines').html('');
   let articlesFrag = document.createDocumentFragment();
 
   articles.forEach(article => {
-    console.log('article: ', article);
-    let headline = document.createElement('li');
+    let articleElem = document.createElement('li');
+    articleElem.id = `article-${article.id}`;
+
+    let headline = document.createElement('p');
+    headline.innerText = article.headline;
+
     let byline = document.createElement('span');
     byline.innerText = article.byline;
-    headline.id = `article-${article.id}`;
-    headline.innerHTML = article.headline;
-    headline.appendChild(byline);
-    articlesFrag.appendChild(headline);
+
+    articleElem.appendChild(headline);
+    articleElem.appendChild(byline);
+    articlesFrag.appendChild(articleElem);
   });
 
   $('#latest-headlines').append(articlesFrag);
 };
+/* harmony export (immutable) */ __webpack_exports__["appendArticles"] = appendArticles;
 
-$('#latest-headlines').on('click', 'li', event => {
-  let article = $(event.target)[0];
+
+$('#latest-headlines').on('click', 'li', function (event) {
+  let article = $(this)[0];
   __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__indexedDB__["b" /* saveForOfflineReading */])({
-    id: article.id.split('-')[1],
-    headline: $(article).text(),
+    id: $(article).attr('id').split('-')[1],
+    headline: $(article).find('p').text(),
     byline: $(article).find('span').text()
   });
+
+  $(article).addClass('starred');
 });
 
 if ('serviceWorker' in navigator) {

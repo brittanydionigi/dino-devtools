@@ -1,3 +1,5 @@
+import { appendArticles } from './main.js';
+
 // IndexedDB Variables
 const DB_NAME = 'offlineArticles';
 const DB_VERSION = 2;
@@ -36,18 +38,47 @@ function setupIndexedDB() {
 };
 
 // Cycle through IndexedDB Records and log values
-export const logDbRecords = () => {
+export const loadOfflineArticles = () => {
   console.log('Logging DB Records!');
   let objectStore = db.transaction(DB_STORE_NAME, 'readwrite').objectStore(DB_STORE_NAME);
   let headlineIndex = objectStore.index('headline');
+  let articles = [];
+
   objectStore.openCursor().onsuccess = (event) => {
     console.log("Opened cursor...");
     let cursor = event.target.result;
     if (cursor) {
-      $('#latest-headlines').append(`<li>${cursor.value.headline}<span>${cursor.value.byline}</span></li>`);
+      console.log('cursor: ', cursor.value);
+      articles.push(cursor.value);
       cursor.continue();
+    } else {
+      console.log('appending articles: ', articles);
+      appendArticles(articles);
     }
   }
+}
+
+export const checkOfflineArticle = (articleId) => {
+  let dbReq = indexedDB.open('offlineArticles');
+
+  dbReq.onsuccess = (event) => {
+    console.log('DB opened from service worker');
+    
+    let db = event.target.result;
+    let transaction = db.transaction(['articles'], 'readwrite');
+
+    let objectStore = transaction.objectStore("articles");
+    let objectStoreReq = objectStore.get(articleId);
+
+    objectStoreReq.onsuccess = (event) => {
+      console.log('it exists!');
+      return true;
+    }
+
+    objectStoreReq.onerror = (event) => {
+      return false;
+    }
+  };
 }
 
 export const saveForOfflineReading = (article) => {
@@ -75,14 +106,6 @@ export const saveForOfflineReading = (article) => {
       console.log('objectStore request succeeded');    
       $(`li#article-${article.id}`).addClass('starred');
     }
-
-    objectStoreReq.onerror = (event) => {
-      console.log('objectStore request failed', event);
-    };
-  };
-
-  dbReq.onerror = (event) => {
-    console.log('DB not opened from sw');
   };
 }
 

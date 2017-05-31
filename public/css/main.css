@@ -30,10 +30,27 @@ ul {
 
 li {
   list-style-type: none;
+  padding: 10px 0px;
+  border-bottom: 1px solid #ccc;
+  position: relative;
 }
 
-li.starred {
-  background-color: yellow;
+li:hover {
+  cursor: pointer;
+}
+
+li p {
+  margin: 0px;
+}
+
+li.starred p:after {
+  content: url('../img/star.png');
+  display: inline-block;
+  height: 20px;
+  width: 20px;
+  position: absolute;
+  top: 7px;
+  margin: 0 0 0 10px;
 }
 
 li span {
@@ -41,5 +58,24 @@ li span {
   color: #999;
   text-transform: uppercase;
   display: block;
-  margin: 5px 0 25px 0;
+  margin: 5px 0 10px 0;
+}
+
+#connection-status {
+  display: inline-block;
+  width: 100px;
+  text-align: center;
+  text-transform: uppercase;
+  font-weight: 600;
+  border: 1px solid green;
+  border-radius: 4px;
+  padding: 5px 10px;
+  font-size: 11px;
+  color: green;
+  margin: 20px;
+}
+
+#connection-status.offline {
+  color: red;
+  border: 1px solid red;
 }
