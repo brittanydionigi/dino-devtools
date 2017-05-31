@@ -76,6 +76,34 @@ const fetchLatestHeadlines = () => {
   fetch('/api/v1/articles').then(response => response.json()).then(articles => appendArticles(articles)).catch(error => console.log('error: ', error));
 };
 
+const handleOnlineState = () => {
+  updateConnectionStatus('online');
+};
+
+const handleOfflineState = () => {
+  updateConnectionStatus('offline');
+};
+
+window.addEventListener('online', event => {
+  console.log('online!');
+  handleOnlineState();
+});
+
+window.addEventListener('offline', event => {
+  console.log('offline!');
+  handleOfflineState();
+});
+
+const updateConnectionStatus = status => {
+  const $connectionStatus = $('#connection-status');
+
+  if (status === 'offline') {
+    $connectionStatus.addClass('offline').text(status);
+  } else {
+    $connectionStatus.removeClass('offline').text(status);
+  }
+};
+
 const appendArticles = articles => {
   $('#latest-headlines').html('');
   let articlesFrag = document.createDocumentFragment();
