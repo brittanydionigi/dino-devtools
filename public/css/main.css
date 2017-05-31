@@ -32,6 +32,10 @@ li {
   list-style-type: none;
 }
 
+li.starred {
+  background-color: yellow;
+}
+
 li span {
   font-size: 12px;
   color: #999;
