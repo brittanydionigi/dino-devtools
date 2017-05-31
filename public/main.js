@@ -1,16 +1,11 @@
-import { loadOfflineArticles, checkOfflineArticle, saveForOfflineReading } from './indexedDB';
+import { loadOfflineArticles, saveForOfflineReading } from './indexedDB';
 
 const fetchLatestHeadlines = () => {
   fetch('/api/v1/news')
   .then(response => response.json())
-  .then(articles => {
-    appendArticles(articles);
-  })
-  .catch(error => {
-    loadOfflineArticles();
-  });
+  .then(articles => appendArticles(articles))
+  .catch(error => loadOfflineArticles());
 };
-
 
 const handleOfflineState = () => {
   updateConnectionStatus('offline');
@@ -22,15 +17,11 @@ const handleOnlineState = () => {
   fetchLatestHeadlines();
 }
 
-fetchLatestHeadlines();
-
 window.addEventListener('online', event => {
-  console.log('online again!');
   handleOnlineState();
 });
 
 window.addEventListener('offline', event => {
-  console.log('offline!');
   handleOfflineState();
 });
 
@@ -80,6 +71,7 @@ $('#latest-headlines').on('click', 'li', function(event) {
 
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
+    fetchLatestHeadlines();
     navigator.serviceWorker.register('./service-worker.js')
       .then(registration => {
         // Registration was successful
