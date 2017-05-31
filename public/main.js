@@ -3,6 +3,7 @@ import {
   checkOfflineAvailability,
   saveOfflineArticle,
   removeOfflineArticle } from './indexedDB';
+import { sendMessage } from './sendMessage';
 
 const fetchLatestHeadlines = () => {
   fetch('/api/v1/articles')
