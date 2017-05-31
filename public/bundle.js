@@ -172,16 +172,34 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__indexedDB__ = __webpack_require__(0);
 
 
-fetch('/api/v1/news').then(response => response.json()).then(articles => appendNews(articles)).catch(error => {
-  appendError('Error fetching articles. Showing offline articles instead.');
+const fetchLatestHeadlines = () => {
+  fetch('/api/v1/news').then(response => response.json()).then(articles => {
+    appendConnectionStatus('Online!');
+    appendNews(articles);
+  }).catch(error => {
+    appendConnectionStatus('Error fetching articles. Showing offline articles instead.');
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__indexedDB__["a" /* logDbRecords */])();
+  });
+};
+
+fetchLatestHeadlines();
+
+window.addEventListener('online', event => {
+  console.log('online again!');
+  fetchLatestHeadlines();
+});
+
+window.addEventListener('offline', event => {
+  console.log('offline!');
   __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__indexedDB__["a" /* logDbRecords */])();
 });
 
-const appendError = message => {
+const appendConnectionStatus = message => {
   $('#notification').text(message);
 };
 
 const appendNews = articles => {
+  $('#latest-headlines').html('');
   let articlesFrag = document.createDocumentFragment();
 
   articles.forEach(article => {

@@ -1,19 +1,38 @@
 import { logDbRecords, saveForOfflineReading } from './indexedDB';
 
-fetch('/api/v1/news')
+const fetchLatestHeadlines = () => {
+  fetch('/api/v1/news')
   .then(response => response.json())
-  .then(articles => appendNews(articles))
+  .then(articles => {
+    appendConnectionStatus('Online!');
+    appendNews(articles)
+  })
   .catch(error => {
-    appendError('Error fetching articles. Showing offline articles instead.');
+    appendConnectionStatus('Error fetching articles. Showing offline articles instead.');
     logDbRecords();
   });
+};
 
 
-const appendError = (message) => {
+fetchLatestHeadlines();
+
+window.addEventListener('online', event => {
+  console.log('online again!');
+  fetchLatestHeadlines()
+});
+
+window.addEventListener('offline', event => {
+  console.log('offline!');
+  logDbRecords();
+});
+
+
+const appendConnectionStatus = (message) => {
   $('#notification').text(message);
 };
 
 const appendNews = (articles) => {
+  $('#latest-headlines').html('');
   let articlesFrag = document.createDocumentFragment();
 
   articles.forEach(article => {
