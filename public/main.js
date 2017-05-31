@@ -1,16 +1,24 @@
+import { 
+  loadOfflineArticles,
+  checkOfflineAvailability,
+  saveOfflineArticle,
+  removeOfflineArticle } from './indexedDB';
+
 const fetchLatestHeadlines = () => {
   fetch('/api/v1/articles')
   .then(response => response.json())
   .then(articles => appendArticles(articles))
-  .catch(error => console.log('error: ', error));
+  .catch(error => loadOfflineArticles());
 };
 
 const handleOnlineState = () => {
   updateConnectionStatus('online');
+  fetchLatestHeadlines();
 };
 
 const handleOfflineState = () => {
   updateConnectionStatus('offline');
+  loadOfflineArticles();
 };
 
 window.addEventListener('online', event => {
@@ -44,6 +52,11 @@ export const appendArticles = (articles) => {
     headline.innerText = article.headline;
     headline.dataset.articleId = article.id;
 
+    checkOfflineAvailability(article.id)
+    .then(article => {
+      if (article) { headline.classList.add('starred'); }
+    });
+
     let byline = document.createElement('span');
     byline.innerText = article.byline;
 
@@ -61,6 +74,12 @@ $('#latest-headlines').on('click', 'p', function(event) {
   let id = elem.dataset.articleId;
   let headline = elem.innerText;
   let byline = elem.nextSibling.innerText;
+
+  if (elem.classList.contains('starred')) {
+    removeOfflineArticle(id);
+  } else {
+    saveOfflineArticle({ id, headline, byline });
+  }
 
   elem.classList.toggle('starred');
 });
