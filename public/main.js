@@ -85,16 +85,32 @@ $('#latest-headlines').on('click', 'p', function(event) {
   elem.classList.toggle('starred');
 });
 
-if ('serviceWorker' in navigator) {
+if ('serviceWorker' in navigator && 'SyncManager' in window && 'Notification' in window) {
   window.addEventListener('load', () => {
     fetchLatestHeadlines();
     navigator.serviceWorker.register('./service-worker.js')
+      .then(registration => navigator.serviceWorker.ready)
       .then(registration => {
-        // Registration was successful
-        console.log('ServiceWorker registration successful');
+        Notification.requestPermission();
+        $('#submit-article').on('click', function(event) {
+          let headline = $('#headline-input').val();
+          let byline = $('#byline-input').val();
+
+          sendMessage({ 
+            type: 'add-article',
+            article: { headline, byline, id: Math.random() }
+          });
+        });
+
       }).catch(err => {
         // registration failed :(
         console.log(`ServiceWorker registration failed: ${err}`);
       });
   });
 }
+
+navigator.serviceWorker.addEventListener('message', function(event) {
+  if (event.data.articles) {
+    appendArticles(event.data.articles);
+  }
+});
