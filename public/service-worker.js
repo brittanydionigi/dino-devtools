@@ -30,6 +30,6 @@ self.addEventListener('activate', (event) => {
           return caches.delete(key);
         }
       }));
-    })
+    }).then(() => clients.claim())
   );
 });
