@@ -1,7 +1,11 @@
-import { loadOfflineArticles, saveForOfflineReading } from './indexedDB';
+import { 
+  loadOfflineArticles,
+  checkOfflineAvailability,
+  saveOfflineArticle,
+  removeOfflineArticle } from './indexedDB';
 
 const fetchLatestHeadlines = () => {
-  fetch('/api/v1/news')
+  fetch('/api/v1/articles')
   .then(response => response.json())
   .then(articles => appendArticles(articles))
   .catch(error => loadOfflineArticles());
@@ -42,10 +46,15 @@ export const appendArticles = (articles) => {
 
   articles.forEach(article => {
     let articleElem = document.createElement('li');
-    articleElem.id = `article-${article.id}`;
+    
+    checkOfflineAvailability(article.id)
+    .then(article => {
+      if (article) { articleElem.classList.add('starred'); }
+    })
 
     let headline = document.createElement('p');
     headline.innerText = article.headline;
+    headline.dataset.articleId = article.id;
 
     let byline = document.createElement('span');
     byline.innerText = article.byline;
@@ -58,15 +67,20 @@ export const appendArticles = (articles) => {
   $('#latest-headlines').append(articlesFrag);
 };
 
-$('#latest-headlines').on('click', 'li', function(event) {
-  let article = $(this)[0];
-  saveForOfflineReading({
-    id: $(article).attr('id').split('-')[1],
-    headline: $(article).find('p').text(),
-    byline: $(article).find('span').text()
-  });
+$('#latest-headlines').on('click', 'p', function(event) {
+  let elem = event.currentTarget;
 
-  $(article).addClass('starred');
+  let id = elem.dataset.articleId;
+  let headline = elem.innerText;
+  let byline = elem.nextSibling.innerText;
+
+  if (elem.classList.contains('starred')) {
+    removeOfflineArticle(id);
+  } else {
+    saveOfflineArticle({ id, headline, byline });
+  }
+
+  elem.classList.toggle('starred');
 });
 
 if ('serviceWorker' in navigator) {

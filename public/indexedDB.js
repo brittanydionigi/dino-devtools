@@ -7,11 +7,17 @@ db.version(1).stores({
   articles: 'id, headline, byline'
 });
 
-export const saveForOfflineReading = (article) => {
-  db.articles.put(article).then(id => {
-    console.log('id: ', id); 
-    $(`li#article-${id}`).addClass('starred');
-  })
+export const saveOfflineArticle = (article) => {
+  return db.articles.put(article);
+}
+
+export const checkOfflineAvailability = (id) => {
+  console.log('id: ', id);
+  return db.articles.get(id.toString())
+}
+
+export const removeOfflineArticle = (id) => {
+  return db.articles.delete(id);
 }
 
 export const loadOfflineArticles = () => {

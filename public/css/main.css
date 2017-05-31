@@ -41,15 +41,16 @@ li:hover {
 
 li p {
   margin: 0px;
+  position: relative;
 }
 
-li.starred p:after {
+li p.starred:after {
   content: url('../img/star.png');
   display: inline-block;
   height: 20px;
   width: 20px;
   position: absolute;
-  top: 7px;
+  top: -2px;
   margin: 0 0 0 10px;
 }
 

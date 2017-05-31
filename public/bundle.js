@@ -76,7 +76,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 const fetchLatestHeadlines = () => {
-  fetch('/api/v1/news').then(response => response.json()).then(articles => appendArticles(articles)).catch(error => __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__indexedDB__["a" /* loadOfflineArticles */])());
+  fetch('/api/v1/articles').then(response => response.json()).then(articles => appendArticles(articles)).catch(error => __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__indexedDB__["a" /* loadOfflineArticles */])());
 };
 
 const handleOfflineState = () => {
@@ -113,10 +113,16 @@ const appendArticles = articles => {
 
   articles.forEach(article => {
     let articleElem = document.createElement('li');
-    articleElem.id = `article-${article.id}`;
+
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__indexedDB__["b" /* checkOfflineAvailability */])(article.id).then(article => {
+      if (article) {
+        articleElem.classList.add('starred');
+      }
+    });
 
     let headline = document.createElement('p');
     headline.innerText = article.headline;
+    headline.dataset.articleId = article.id;
 
     let byline = document.createElement('span');
     byline.innerText = article.byline;
@@ -131,15 +137,20 @@ const appendArticles = articles => {
 /* harmony export (immutable) */ __webpack_exports__["appendArticles"] = appendArticles;
 
 
-$('#latest-headlines').on('click', 'li', function (event) {
-  let article = $(this)[0];
-  __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__indexedDB__["b" /* saveForOfflineReading */])({
-    id: $(article).attr('id').split('-')[1],
-    headline: $(article).find('p').text(),
-    byline: $(article).find('span').text()
-  });
+$('#latest-headlines').on('click', 'p', function (event) {
+  let elem = event.currentTarget;
 
-  $(article).addClass('starred');
+  let id = elem.dataset.articleId;
+  let headline = elem.innerText;
+  let byline = elem.nextSibling.innerText;
+
+  if (elem.classList.contains('starred')) {
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__indexedDB__["c" /* removeOfflineArticle */])(id);
+  } else {
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0__indexedDB__["d" /* saveOfflineArticle */])({ id, headline, byline });
+  }
+
+  elem.classList.toggle('starred');
 });
 
 if ('serviceWorker' in navigator) {
@@ -173,13 +184,23 @@ db.version(1).stores({
   articles: 'id, headline, byline'
 });
 
-const saveForOfflineReading = article => {
-  db.articles.put(article).then(id => {
-    console.log('id: ', id);
-    $(`li#article-${id}`).addClass('starred');
-  });
+const saveOfflineArticle = article => {
+  return db.articles.put(article);
 };
-/* harmony export (immutable) */ __webpack_exports__["b"] = saveForOfflineReading;
+/* harmony export (immutable) */ __webpack_exports__["d"] = saveOfflineArticle;
+
+
+const checkOfflineAvailability = id => {
+  console.log('id: ', id);
+  return db.articles.get(id.toString());
+};
+/* harmony export (immutable) */ __webpack_exports__["b"] = checkOfflineAvailability;
+
+
+const removeOfflineArticle = id => {
+  return db.articles.delete(id);
+};
+/* harmony export (immutable) */ __webpack_exports__["c"] = removeOfflineArticle;
 
 
 const loadOfflineArticles = () => {
