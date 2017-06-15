@@ -1,24 +1,31 @@
+$primaryBackground: rgb(2, 157, 144);
+$secondaryBackground: rgba(2, 157, 144, 0.5);
+$primaryText: rgba(0, 0, 0, 0.6);
+$secondaryText: rgba(0, 0, 0, 0.8);
+
 body {
-  margin: 0 auto;
-  background: #F2F2F2;
-  color: #333;
+  margin: 0 50px;
+  background: $secondaryBackground;
+  color: $primaryText;
   font-family: 'Helvetica Neue', Helvetica;
 }
 
 header {
-  background: rgb(2, 157, 144);
+  background: $primaryBackground;
   padding: 20px;
 }
 
-header img {
-  display: inline-block;
-  float: left;
-  line-height: 50px;
+header {
+  img {
+    display: inline-block;
+    float: left;
+    line-height: 50px;
+  }
 }
 
 h2 {
-  font-weight: 200;
-  color: #f2f2f2;
+  font-weight: 400;
+  color: $primaryText;
   margin: 0 15px;
   display: inline-block;
   line-height: 50px;
@@ -45,7 +52,7 @@ li p {
 }
 
 li p.starred:after {
-  content: url('../img/star.png');
+  content: url('./public/assets/img/star.png');
   display: inline-block;
   height: 20px;
   width: 20px;
@@ -56,7 +63,7 @@ li p.starred:after {
 
 li span {
   font-size: 12px;
-  color: #999;
+  color: $secondaryText;
   text-transform: uppercase;
   display: block;
   margin: 5px 0 10px 0;
