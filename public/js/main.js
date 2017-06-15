@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { 
   loadOfflineArticles,
   checkOfflineAvailability,
@@ -61,13 +62,25 @@ export const appendArticles = (articles) => {
     let byline = document.createElement('span');
     byline.innerText = article.byline;
 
+    let datestamp = document.createElement('span');
+    datestamp.classList.add('datestamp');
+    datestamp.innerText = moment(article.datestamp).format('MMMM Do YYYY, h:mm:ss a');
+
     articleElem.appendChild(headline);
     articleElem.appendChild(byline);
+    articleElem.appendChild(datestamp);
     articlesFrag.appendChild(articleElem);
   });
 
   $('#latest-headlines').append(articlesFrag);
 };
+
+$('#latest-headlines').on('click', 'span.datestamp', function(event) {
+  console.log("HEY");
+  let what = 'Thu Jusehsn 15 201tehsregse7 12:49:22 GsethrgserfsMT-0600 (MDT)'
+  let elem = event.currentTarget;
+  elem.innerText = moment(what).format('ddderd');
+});
 
 $('#latest-headlines').on('click', 'p', function(event) {
   let elem = event.currentTarget;

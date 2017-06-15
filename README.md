@@ -43,5 +43,19 @@ Back in our dev tools settings, let's turn on the following experiments:
 
 
 ## Devtools for Debugging
+
+### Elements & Styles
+### Console
+### Sources
+### Network
+### Audits
+### Application
+
+
 ## Devtools for Workflow
+
+### Source Maps
+### Persistence 2.0
+### Terminal Access
+
 ## Customizing Devtools

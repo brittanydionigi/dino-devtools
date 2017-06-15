@@ -7,9 +7,9 @@ app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.locals.articles = [
-  { id: 1, headline: 'Penguins defeat Senators in 2OT of Game 7, return to Cup Final', byline: 'Bob Loblaw' },
-  { id: 2, headline: 'Penguins will play Predators in Stanley Cup Final', byline: 'Bob Loblaw' },
-  { id: 3, headline: 'Playoff Buzz: What we learned Thursday', byline: 'Bob Loblaw' },
+  { id: 1, datestamp: new Date(), headline: 'Penguins defeat Senators in 2OT of Game 7, return to Cup Final', byline: 'Bob Loblaw' },
+  { id: 2, datestamp: new Date(), headline: 'Penguins will play Predators in Stanley Cup Final', byline: 'Bob Loblaw' },
+  { id: 3, datestamp: new Date(), headline: 'Playoff Buzz: What we learned Thursday', byline: 'Bob Loblaw' },
 ];
 
 app.get('/', (request, response) => {

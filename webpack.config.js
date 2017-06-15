@@ -1,7 +1,7 @@
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = {
-  devtool: 'source-map',
+  devtool: '#inline-source-map',
   entry: ['./main.scss', './public/js/main.js', './public/assets/img/star.png'],
   output: {
     path: __dirname + '/public',
