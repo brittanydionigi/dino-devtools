@@ -15,7 +15,7 @@ export const saveOfflineArticle = (article) => {
 }
 
 export const checkOfflineAvailability = (id) => {
-  return db.articles.get(id.toString())
+  return db.articles.get(id)
 }
 
 export const removeOfflineArticle = (id) => {

@@ -16,3 +16,9 @@ When we click on a colored tag, any articles with that tag should be highlighted
 **Practice Scenario 2 - Updating the Byline**  
 
 The bylines for each article are contenteditable fields. When you click on the byline, you should be able to edit it and have your changes persist upon hitting the 'enter' key.
+
+------------------------------------------
+
+**Practice Scenario 3 - Persisting Articles in IndexedDB**  
+
+When we click 'Save for offline reading', the article should be saved to IndexedDB. When we refresh the page, any articles that are in IndexedDB should have the star icon indicator denoting that it is available offline.

@@ -147,9 +147,17 @@ $('#latest-headlines').on('click', 'p', function(event) {
   let byline = elem.nextSibling.innerText;
 
   if (elem.classList.contains('starred')) {
-    removeOfflineArticle(id);
+    removeOfflineArticle(id)
+      .then(() => console.log('successfully removed from idb'))
+      .catch(error => {
+        throw new Error('Error removing article from DB');
+      });
   } else {
-    saveOfflineArticle({ id, headline, byline });
+    saveOfflineArticle({ id, headline, byline })
+      .then(() => console.log('successfully added to indexedDB'))
+      .catch(error => {
+        throw new Error('Error adding article to DB');
+      })
   }
 
   elem.classList.toggle('starred');
