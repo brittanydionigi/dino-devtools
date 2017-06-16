@@ -4,9 +4,15 @@
 This is a purposefully terribly-built application for the sake of demonstrating how to use Chrome's Developer Tools to debug even the gnarliest of codebases. Please do not use it as a reference for best practices and do not file issues or pull requests to improve it. IT IS BEAUTIFUL JUST THE WAY IT IS.
 
 ### Outline
+
+This workshop is geared towards a variety of skill levels. Some of the information you may already know, but hopefully everyone walks away with learning a little something new by the end of the workshop.
+
+The Breakdown:
+
 1) Setup & Configuration
-2) Devtools for Debugging
-3) Devtools for Workflow
+2) Devtools for Debugging: tips & tricks for debugging with default panels
+3) Practice: group debugging session, followed by individual practice
+4) Devtools for Workflow: playing around with experiments and other fun things
 
 ## Setup & Configuration
 
@@ -43,21 +49,3 @@ We'll also want to turn on some experimental features. Navigate to [chrome://fla
 Back in our dev tools settings, let's turn on the following experiments:
 
 ![Initial Experiments](./workshop-assets/experiments-v1.png)
-
-
-
-## Devtools for Debugging
-
-### Elements & Styles
-### Console
-### Sources
-### Network
-### Audits
-### Application
-
-
-## Devtools for Workflow
-
-### Changes Drawer
-### Persistence 2.0
-### Terminal Access
