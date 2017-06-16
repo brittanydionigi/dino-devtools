@@ -43,11 +43,25 @@ const updateConnectionStatus = (status) => {
   }
 }
 
+const highlightHeadline = (color, tag) => {
+  $(`#latest-headlines li.${tagName}`).css('background-color', color);
+}
+
+$('#filterHeadlines li').click(function(event) {
+  let tagName = $(this).data('tagName');
+  let color = $(this).css('background-color');
+  highlightHeadline(tagName);
+});
+
 export const appendArticles = (articles) => {
   let articlesFrag = document.createDocumentFragment();
 
   articles.forEach(article => {
     let articleElem = document.createElement('li');
+
+    article.tags.forEach(tag => {
+      articleElem.classList.add(tag);
+    });
 
     let headline = document.createElement('p');
     headline.innerText = article.headline;

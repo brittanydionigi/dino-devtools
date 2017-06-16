@@ -8,7 +8,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.locals.articles = [
   { id: 1, datestamp: new Date(), tags: ['hockey', 'recap'], headline: 'Rangers defeat Senators in 2OT of Game 7, return to Cup Final', byline: 'Bob Loblaw' },
-  { id: 2, datestamp: new Date(), tags: ['hockey', 'stanley cup'], headline: 'Predators will play Rangers in Stanley Cup Final', byline: 'NHL.com' },
+  { id: 2, datestamp: new Date(), tags: ['hockey', 'stanleyCup'], headline: 'Predators will play Rangers in Stanley Cup Final', byline: 'NHL.com' },
   { id: 3, datestamp: new Date(), tags: ['hockey', 'playoffs'], headline: 'Playoff Buzz: What we learned Thursday', byline: 'Aunt Tilly' },
   { id: 4, datestamp: new Date(), tags: ['football', 'patriots'], headline: 'New England Patriots are the worst', byline: 'NFL.com' },
   { id: 5, datestamp: new Date(), tags: ['football', 'preview'], headline: 'Looking forward to the 2017 Football Season', byline: 'NFL.com' },

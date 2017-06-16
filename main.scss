@@ -38,42 +38,74 @@ header {
   }
 }
 
-#latest-headlines {
+#highlightHeadlines {
   clear: both;
   margin-top: 60px;
   padding-top: 30px;
+  margin-left: 30px;
+
+  ul { margin-left: 0px; padding-left: 0px; }
+  li {
+    margin-left: 0px;
+    list-style-type: none;
+    display: inline-block;
+    color: rgba(0,0,0,0.7);
+    margin: 0 5px;
+    border: 1px solid rgba(0,0,0,0.5);
+    border-radius: 4px;
+    padding: 3px 5px;
+    font-size: 11px;
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
+  li.Football { background-color: #e88585; }
+  li.Hockey { background-color: #f9bc48; }
+  li.Playoffs { background-color: yellow; }
+  li.Stanley { background-color: #b0d6aa; }
+  li.Patriots { background-color: #aaaad6; }
+
 }
 
-li {
-  list-style-type: none;
-  max-width: 700px;
-  padding: 10px 0px;
-  border-bottom: 1px solid #ccc;
-  position: relative;
+#latest-headlines {
+  clear: both;
+
+  li {
+    list-style-type: none;
+    max-width: 700px;
+    padding: 10px 0px;
+    border-bottom: 1px solid #ccc;
+    position: relative;
+  }
+
+  li p {
+    margin: 0px;
+    position: relative;
+  }
+
+  li p.starred:after {
+    content: url('./public/assets/img/star.png');
+    display: inline-block;
+    height: 20px;
+    width: 20px;
+    position: absolute;
+    top: -2px;
+    margin: 0 0 0 10px;
+  }
+
+  li span {
+    font-size: 12px;
+    color: $secondaryText;
+    text-transform: uppercase;
+    display: block;
+    margin: 5px 0 10px 0;
+  }
+
 }
 
-li p {
-  margin: 0px;
-  position: relative;
-}
 
-li p.starred:after {
-  content: url('./public/assets/img/star.png');
-  display: inline-block;
-  height: 20px;
-  width: 20px;
-  position: absolute;
-  top: -2px;
-  margin: 0 0 0 10px;
-}
-
-li span {
-  font-size: 12px;
-  color: $secondaryText;
-  text-transform: uppercase;
-  display: block;
-  margin: 5px 0 10px 0;
-}
 
 #connectionStatus {
   position: absolute;
