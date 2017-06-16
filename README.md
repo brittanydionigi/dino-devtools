@@ -20,18 +20,7 @@ The Breakdown:
 
 Canary is a more beta release of the Chrome browser. It comes with the most bleeding-edge features that will eventually be released to the standard Chrome browser. Using Canary will allow us to play with new dev tools features before they are released.
 
-### 2) Clone This Practice Repo:
-
-```bash
-git clone https://github.com/brittanystoroz/dino-devtools.git 
-npm install
-webpack --watch
-npm start
-```
-
-You should then see the app running on localhost:3000.
-
-### 3) Configure Your Dev Tools Settings
+### 2) Configure Your Dev Tools Settings
 
 The bulk of your dev tools settings will exist under the 'Preferences' tab. The configuration I prefer to use looks like the following: 
 
@@ -49,3 +38,15 @@ We'll also want to turn on some experimental features. Navigate to [chrome://fla
 Back in our dev tools settings, let's turn on the following experiments:
 
 ![Initial Experiments](./workshop-assets/experiments-v1.png)
+
+
+### 3) Clone This Practice Repo:
+
+```bash
+git clone https://github.com/brittanystoroz/dino-devtools.git 
+npm install
+webpack --watch
+npm start
+```
+
+You should then see the app running on localhost:3000.
