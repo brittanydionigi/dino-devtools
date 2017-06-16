@@ -1,7 +1,7 @@
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = {
-  devtool: '#inline-source-map',
+  // devtool: 'inline-source-map',
   entry: ['./main.scss', './public/js/main.js', './public/assets/img/star.png'],
   output: {
     path: __dirname + '/public',
@@ -28,10 +28,13 @@ module.exports = {
         test: /\.scss$/,        
         use: ExtractTextPlugin.extract({
           fallback: 'style-loader',
-          //resolve-url-loader may be chained before sass-loader if necessary
+          // use: [
+          //   { loader: 'css-loader?sourceMap', options: { sourceMap: true }},
+          //   { loader: 'sass-loader?sourceMap', options: { sourceMap: true }}
+          // ]
           use: [
-            { loader: 'css-loader?sourceMap', options: { sourceMap: true }},
-            { loader: 'sass-loader?sourceMap', options: { sourceMap: true }}
+            { loader: 'css-loader' },
+            { loader: 'sass-loader' }
           ]
         })
       }

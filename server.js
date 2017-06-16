@@ -7,9 +7,11 @@ app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.locals.articles = [
-  { id: 1, datestamp: new Date(), headline: 'Penguins defeat Senators in 2OT of Game 7, return to Cup Final', byline: 'Bob Loblaw' },
-  { id: 2, datestamp: new Date(), headline: 'Penguins will play Predators in Stanley Cup Final', byline: 'Bob Loblaw' },
-  { id: 3, datestamp: new Date(), headline: 'Playoff Buzz: What we learned Thursday', byline: 'Bob Loblaw' },
+  { id: 1, datestamp: new Date(), tags: ['hockey', 'recap'], headline: 'Rangers defeat Senators in 2OT of Game 7, return to Cup Final', byline: 'Bob Loblaw' },
+  { id: 2, datestamp: new Date(), tags: ['hockey', 'stanley cup'], headline: 'Predators will play Rangers in Stanley Cup Final', byline: 'NHL.com' },
+  { id: 3, datestamp: new Date(), tags: ['hockey', 'playoffs'], headline: 'Playoff Buzz: What we learned Thursday', byline: 'Aunt Tilly' },
+  { id: 4, datestamp: new Date(), tags: ['football', 'patriots'], headline: 'New England Patriots are the worst', byline: 'NFL.com' },
+  { id: 5, datestamp: new Date(), tags: ['football', 'preview'], headline: 'Looking forward to the 2017 Football Season', byline: 'NFL.com' },
 ];
 
 app.get('/', (request, response) => {
@@ -21,6 +23,15 @@ app.get('/api/v1/articles', (request, response) => {
 });
 
 app.post('/api/v1/articles', (request, response) => {
+
+  for (let requiredParameter of ['datestamp', 'headline']) {
+  if (!request.body[requiredParameter]) {
+    return response
+      .status(422)
+      .send({ error: `Expected format: { headline: <String>, datestamp: <Date> }. You're missing a "${requiredParameter}" property.` });
+  }
+}
+
   app.locals.articles.push(request.body);
   response.status(201).json(app.locals.articles);
 });

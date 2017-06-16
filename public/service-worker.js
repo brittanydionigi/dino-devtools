@@ -1,4 +1,4 @@
-// let syncQueue = [];
+let syncQueue = [];
 
 // self.addEventListener('install', event => {
 //   event.waitUntil(
@@ -36,35 +36,41 @@
 //   );
 // });
 
-// const addArticle = () => {
-//   let newestArticle = syncQueue.shift();
-//   return fetch('/api/v1/articles', {
-//     method: 'POST',
-//     body: JSON.stringify(newestArticle),
-//     headers: { 'Content-Type': 'application/json' }
-//   });
-// }
+const addArticle = () => {
+  let newestArticle = syncQueue.shift();
+  return fetch('/api/v1/articles', {
+    method: 'POST',
+    body: JSON.stringify(newestArticle),
+    headers: { 'Content-Type': 'application/json' }
+  });
+}
 
-// self.addEventListener('message', (event) => {
-//   if (event.data.type === 'add-article') {
-//     syncQueue.push(event.data.article);
-//   }
-//   self.registration.sync.register('addArticle')
-// });
+self.addEventListener('message', (event) => {
+  if (event.data.type === 'add-article') {
+    syncQueue.push(event.data.article);
+  }
+  self.registration.sync.register('addArticle')
+});
 
-// self.addEventListener('sync', function (event) {
-//   if (event.tag === 'addArticle') {
-//     event.waitUntil(addArticle()
-//       .then(response => response.json())
-//       .then(articles => {
-//         self.clients.matchAll().then(clients => {
-//           clients[0].postMessage({ articles: articles });
-//         });
-//         self.registration.showNotification("Added new article");
-//       })
-//       .catch(error => {
-//         console.log('error: ', error);
-//       })
-//     );
-//   }
-// });
+self.addEventListener('sync', function (event) {
+  if (event.tag === 'addArticle') {
+    event.waitUntil(addArticle()
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(response.statusText);
+        } else {
+          return response.json();
+        }
+      })
+      .then(articles => {
+        self.clients.matchAll().then(clients => {
+          clients[0].postMessage({ articles: articles });
+        });
+        self.registration.showNotification("Added new article");
+      })
+      .catch(error => {
+        console.log('error: ', JSON.stringify(error));
+      })
+    );
+  }
+});

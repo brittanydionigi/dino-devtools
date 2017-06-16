@@ -34,7 +34,7 @@ window.addEventListener('offline', event => {
 });
 
 const updateConnectionStatus = (status) => {
-  const $connectionStatus = $('#connection-status');
+  const $connectionStatus = $('#connectionStatus');
  
   if (status === 'offline') {
     $connectionStatus.addClass('offline').text(status);
@@ -44,7 +44,6 @@ const updateConnectionStatus = (status) => {
 }
 
 export const appendArticles = (articles) => {
-  $('#latest-headlines').html('');
   let articlesFrag = document.createDocumentFragment();
 
   articles.forEach(article => {
@@ -54,9 +53,17 @@ export const appendArticles = (articles) => {
     headline.innerText = article.headline;
     headline.dataset.articleId = article.id;
 
+    let saveLink = document.createElement('a');
+    saveLink.innerText = 'Save for Offline Reading';
+    saveLink.classList.add('saveOffline');
+
     checkOfflineAvailability(article.id)
     .then(article => {
-      if (article) { headline.classList.add('starred'); }
+      if (article) { 
+        headline.classList.add('starred');
+      } else {
+        headline.appendChild(saveLink);
+      }
     });
 
     let byline = document.createElement('span');
@@ -75,18 +82,19 @@ export const appendArticles = (articles) => {
   $('#latest-headlines').append(articlesFrag);
 };
 
-$('#latest-headlines').on('click', 'span.datestamp', function(event) {
-  console.log("HEY");
-  let what = 'Thu Jusehsn 15 201tehsregse7 12:49:22 GsethrgserfsMT-0600 (MDT)'
-  let elem = event.currentTarget;
-  elem.innerText = moment(what).format('ddderd');
-});
+// $('#latest-headlines').on('click', 'span.datestamp', function(event) {
+//   let what = 'Thu Jusehsn 15 201tehsregse7 12:49:22 GsethrgserfsMT-0600 (MDT)'
+//   let elem = event.currentTarget;
+//   elem.innerText = moment(elem.innerText).format('dddd');
+// });
 
 $('#latest-headlines').on('click', 'p', function(event) {
   let elem = event.currentTarget;
+  let headlineText = elem.innerText;
+  headlineText = headlineText.replace('Save for Offline Reading', '');
 
   let id = elem.dataset.articleId;
-  let headline = elem.innerText;
+  let headline = headlineText;
   let byline = elem.nextSibling.innerText;
 
   if (elem.classList.contains('starred')) {
@@ -98,6 +106,18 @@ $('#latest-headlines').on('click', 'p', function(event) {
   elem.classList.toggle('starred');
 });
 
+const addArticle = (article) => {
+  fetch('/api/v1/articles', {
+    method: 'POST',
+    body: JSON.stringify(article),
+    headers: { 'Content-Type': 'application/json' }
+  })
+  .then(response => response.json())
+  .then(articles => appendArticles(articles))
+  .catch(error => console.log('error: ', error));
+
+}
+
 if ('serviceWorker' in navigator && 'SyncManager' in window && 'Notification' in window) {
   window.addEventListener('load', () => {
     fetchLatestHeadlines();
@@ -105,14 +125,15 @@ if ('serviceWorker' in navigator && 'SyncManager' in window && 'Notification' in
       .then(registration => navigator.serviceWorker.ready)
       .then(registration => {
         Notification.requestPermission();
-        $('#submit-article').on('click', function(event) {
+        $('#submitArticle').on('click', function(event) {
           let headline = $('#headline-input').val();
           let byline = $('#byline-input').val();
 
-          sendMessage({ 
-            type: 'add-article',
-            article: { headline, byline, id: Math.random() }
-          });
+          addArticle({ headline, byline, id: new Date() });
+          // sendMessage({ 
+          //   type: 'add-article',
+          //   article: { headline, byline, id: new Date() }
+          // });
         });
 
       }).catch(err => {

@@ -1,28 +1,28 @@
 <html>
   <head>
-    <title>Fake News 2.00</title>
+    <title>Fake News</title>
     <link rel="stylesheet" type="text/css" href="./assets/css/main.css">
   </head>
   <body>
     <header>
       <img src="./assets/img/logo.png" height="50px" />
-      <h2>Lorem Ipsum Dolort</h2>
-      <h3>Set amet consequetar</h3>
+      <h2>Your #2 Source for Fake News</h2>
+      <h3>This is all a bunch of lies but that's totally ok</h3>
+      <p id="connectionStatus">Online</p>
     </header>
 
-    <div id="add-new">
+    <div id="addNew">
       <label for="headline">Headline:
         <input type="text" id="headline-input" name="headline" />
       </label>
       <label for="byline">Byline:
         <input type="text" id="byline-input" name="byline" />
       </label>
-      <input type="submit" id="submit-article" value="Add Article" />
+      <input type="submit" id="submitArticle" value="Add Article" />
     </div>
-    
-    <p id="connection-status">Online</p>
     <ul id="latest-headlines">
     </ul>
+    <p id="star"><img src="./assets/img/star.png" /> = saved for offline reading</p>
 
     <script src="./js/jquery-3.2.1.js"></script>
     <script src="./bundle.js"></script>

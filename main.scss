@@ -1,21 +1,36 @@
-$primaryBackground: rgb(2, 157, 144);
-$secondaryBackground: rgba(2, 157, 144, 0.5);
-$primaryText: rgba(0, 0, 0, 0.6);
-$secondaryText: rgba(0, 0, 0, 0.8);
+$callToAction: rgb(80, 180, 191);
+$primaryText: rgb(27, 22, 64);
+$secondaryText: rgba(27, 22, 64, 0.6);
+$lightPink: rgb(252, 240, 240);
+$darkPink: rgb(79, 39, 47);
 
 body {
-  margin: 0 50px;
-  background: $secondaryBackground;
+  margin: 0 auto;
+  background: $lightPink;
   color: $primaryText;
-  font-family: 'Helvetica Neue', Helvetica;
+  font-family: 'Roboto', 'Open Sans', 'Helvetica Neue', Helvetica;
 }
 
 header {
-  background: $primaryBackground;
+  color: $lightPink;
+  background: $darkPink;
   padding: 20px;
 }
 
 header {
+
+  h2 {
+    font-weight: 100;
+    margin: 0 15px;
+    display: inline-block;
+    line-height: 32px;
+  }
+
+  h3 {
+    font-size: 14px;
+    margin: 0px 115px;
+  }
+
   img {
     display: inline-block;
     float: left;
@@ -23,27 +38,18 @@ header {
   }
 }
 
-h2 {
-  font-weight: 400;
-  color: $primaryText;
-  margin: 0 15px;
-  display: inline-block;
-  line-height: 50px;
-}
-
-ul {
-  margin-top: 40px;
+#latest-headlines {
+  clear: both;
+  margin-top: 60px;
+  padding-top: 30px;
 }
 
 li {
   list-style-type: none;
+  max-width: 700px;
   padding: 10px 0px;
   border-bottom: 1px solid #ccc;
   position: relative;
-}
-
-li:hover {
-  cursor: pointer;
 }
 
 li p {
@@ -69,50 +75,97 @@ li span {
   margin: 5px 0 10px 0;
 }
 
-#connection-status {
-  display: inline-block;
-  width: 100px;
+#connectionStatus {
+  position: absolute;
+  top: 10px;
+  right: 15px;
   text-align: center;
   text-transform: uppercase;
   font-weight: 600;
-  border: 1px solid green;
+  border: 1px solid #73bb73;
   border-radius: 4px;
   padding: 5px 10px;
   font-size: 11px;
-  color: green;
+  color: rgba(0, 0, 0, 0.75);
+  background-color: #73bb73;
   margin: 20px;
 }
 
-#connection-status.offline {
-  color: red;
-  border: 1px solid red;
+#connectionStatus.offline {
+  background-color: red;
+  border: 1px solid rgba(0,0,0,0.5);
 }
 
-#add-new {
+#addNew {
   display: inline-block;
   float: right;
   padding: 20px;
   background-color: #cedddc;
   border-bottom-left-radius: 3px;
   border-bottom-right-radius: 3px;
+
+  &:after {
+    clear: both;
+    content: ' ';
+    display: block;
+  }
+
+
+  label {
+    font-size: 12px;
+    text-transform: uppercase;
+    line-height: 20px;
+  }
+
+  input[type="text"] {
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    padding: 5px;
+    margin: 0 5px;
+  }
+
+  #submitArticle {
+    border: 1px solid rgba(0,0,0,0.25);
+    border-radius: 4px;
+    font-weight: bold;
+    padding: 10px 20px;
+    font-size: 11px;
+    text-transform: uppercase;
+    background-color: $callToAction;
+
+    &:hover {
+      background-color: #29d2e4;
+      cursor: pointer;
+    }
+  }
 }
 
-#add-new label {
-  font-size: 12px;
-  text-transform: uppercase;
-  line-height: 20px;
+#star {
+  font-size: 11px;
+  line-height: 30px;
+  margin: 10px 40px;
+
+  img {
+    height: 13px;
+    margin-top: 7px;
+    display: inline;
+    float: left;
+    margin-right: 5px;
+  }
 }
 
-#add-new input {
-  border: 1px solid #ddd;
-  border-radius: 3px;
-  padding: 5px;
-  margin: 0 5px;
+.saveOffline {
+  font-size: 11px;
+  font-weight: 600;
+  float: right;
+  color: $callToAction;
+  padding: 0 10px;
+
+  &:hover {
+    cursor: pointer;
+  }
 }
 
-#add-new input[type="submit"] {
-  border: 1px solid rgba(0,0,0,0.25);
-  font-weight: bold;
-  padding: 5px 10px;
-  background-color: #ffcb4a;
+.starred .saveOffline {
+  display: none;
 }
