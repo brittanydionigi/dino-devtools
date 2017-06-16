@@ -7,7 +7,6 @@ This is a purposefully terribly-built application for the sake of demonstrating 
 1) Setup & Configuration
 2) Devtools for Debugging
 3) Devtools for Workflow
-4) Customizing Devtools
 
 ## Setup & Configuration
 
@@ -54,8 +53,6 @@ Back in our dev tools settings, let's turn on the following experiments:
 
 ## Devtools for Workflow
 
-### Source Maps
+### Changes Drawer
 ### Persistence 2.0
 ### Terminal Access
-
-## Customizing Devtools
