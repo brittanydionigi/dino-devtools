@@ -8,6 +8,9 @@ db.version(1).stores({
 });
 
 export const saveOfflineArticle = (article) => {
+  if (!article) {
+    throw new Error('Must provide article information to save for offline reading');
+  }
   return db.articles.put(article);
 }
 

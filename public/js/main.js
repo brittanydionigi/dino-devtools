@@ -114,7 +114,9 @@ const addArticle = (article) => {
   })
   .then(response => response.json())
   .then(articles => appendArticles(articles))
-  .catch(error => console.log('error: ', error));
+  .catch(error => {
+    throw new Error('Error adding article')
+  });
 
 }
 
