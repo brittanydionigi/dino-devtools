@@ -31,6 +31,11 @@ The bulk of your dev tools settings will exist under the 'Preferences' tab. The 
 
 ![Dev Tools Settings](./workshop-assets/settings.png)
 
+Another helpful setting to configure is 'Blackboxing'. Blackboxing allows you to ignore certain types of files (like library or framework code) when debugging. A simple blackboxing configuration might look like this:
+
+![Blackboxing](./workshop-assets/blackboxing.png)
+
+
 We'll also want to turn on some experimental features. Navigate to [chrome://flags](chrome://flags) and find the 'Developer Tools experiments' section. Click the 'Enable' link.
 
 ![Chrome Flags](./workshop-assets/flags.png)
