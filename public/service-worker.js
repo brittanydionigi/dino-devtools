@@ -1,26 +1,26 @@
-let syncQueue = [];
+self.addEventListener('install', event => {
+  event.waitUntil(
+    caches.open('assets-v7').then(cache => {
+      return cache.addAll([
+        '/',
+        '/assets/css/main.css',
+        '/js/jquery-3.2.1.js',
+        '/assets/img/logo.png',
+        '/bundle.js',
+      ])
+    })
+  );
+});
 
-// self.addEventListener('install', event => {
-//   event.waitUntil(
-//     caches.open('assets-v7').then(cache => {
-//       return cache.addAll([
-//         '/',
-//         '/css/main.css',
-//         '/lib/jquery-3.2.1.js',
-//         '/img/logo.png',
-//         '/bundle.js',
-//       ])
-//     })
-//   );
-// });
+self.addEventListener('fetch', event => {
+  event.respondWith(
+    caches.match(event.request).then(response => {
+      return response || fetch(event.request);
+    })
+  );
+});
 
-// self.addEventListener('fetch', event => {
-//   event.respondWith(
-//     caches.match(event.request).then(response => {
-//       return response || fetch(event.request);
-//     })
-//   );
-// });
+// let syncQueue = [];
 
 // self.addEventListener('activate', (event) => {
 //   let cacheWhitelist = ['assets-v7'];

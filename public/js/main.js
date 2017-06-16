@@ -44,6 +44,7 @@ const updateConnectionStatus = (status) => {
 }
 
 export const appendArticles = (articles) => {
+  $('#latest-headlines').html('');
   let articlesFrag = document.createDocumentFragment();
 
   articles.forEach(article => {
