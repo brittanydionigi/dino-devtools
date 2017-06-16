@@ -36,6 +36,24 @@ app.post('/api/v1/articles', (request, response) => {
   response.status(201).json(app.locals.articles);
 });
 
+app.patch('/api/v1/articles/:id', (request, response) => {
+  const { id } = request.params;
+  const index = app.locals.articles.findIndex((m) => m.id == id);
+
+  if (index === -1) { return response.sendStatus(404); }
+
+  if (!request.body.byline) {
+    return response
+      .status(422)
+      .send({ error: `You are trying to update an invalid property name or a property that does not exist.` });
+  }
+
+  const oldarticle = app.locals.articles[index];
+  app.locals.articles[index] = Object.assign(oldarticle, request.body);
+
+  return response.sendStatus(204);
+});
+
 app.listen(app.get('port'), () => { 
   console.log(`App running on port ${app.get('port')}`);
 });

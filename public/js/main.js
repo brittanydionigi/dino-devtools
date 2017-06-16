@@ -13,6 +13,10 @@ const fetchLatestHeadlines = () => {
   .catch(error => loadOfflineArticles());
 };
 
+const showNotification = (note) => {
+  $('body').append(`<p class="notification ${note.status}">${note.message}</p>`);
+}
+
 const handleOnlineState = () => {
   updateConnectionStatus('online');
   fetchLatestHeadlines();
@@ -43,6 +47,34 @@ const updateConnectionStatus = (status) => {
   }
 }
 
+// Add edit handler
+$('#latest-headlines').on('keydown', '.byline', function(event) {
+  const $articleElem = $(this).parent();
+  const id = $articleElem.data('id');
+
+  if (event.keyCode === 13) {
+    $(this).blur();
+    $.ajax({
+      method: 'PUT',
+      dataType: 'json',
+      url: `/api/v1/articles/${id}`,
+      data: $(this).text(),
+      success: function() {
+        showNotification({
+          message: 'Byline Updated Successfully'
+        });
+      },
+      error: function() {
+        showNotification({
+          status: 'error',
+          message: 'Error Updating Byline'
+        });
+      }
+    });
+    return false;
+  }
+});
+
 const highlightHeadline = (color, tag) => {
   $(`#latest-headlines li.${tagName}`).css('background-color', color);
 }
@@ -58,6 +90,7 @@ export const appendArticles = (articles) => {
 
   articles.forEach(article => {
     let articleElem = document.createElement('li');
+    articleElem.dataset.articleId = article.id;
 
     article.tags.forEach(tag => {
       articleElem.classList.add(tag);
@@ -82,6 +115,8 @@ export const appendArticles = (articles) => {
 
     let byline = document.createElement('span');
     byline.innerText = article.byline;
+    byline.classList.add('byline');
+    byline.setAttribute('contentEditable', true);
 
     let datestamp = document.createElement('span');
     datestamp.classList.add('datestamp');
